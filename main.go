@@ -38,9 +38,8 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text() // Get the text of the current line
-		// Run a simple terminal command, like "ls" (or "dir" for Windows)
-		cmd := exec.Command("openssl", "-dgst", "-sha1", "-mac", "-HMAC", "-macopt", "-hexkey:"+line, messagePath)
-		// Capture the output
+		// Run a simple terminal command, liksdfe "ls" (or "dir" for Windows)
+		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+line, messagePath)
 		output, err := cmd.Output()
 		if err != nil {
 			fmt.Println("Error running command:", err)
