@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func main() {
@@ -38,8 +39,7 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		line := scanner.Text() // Get the text of the current line
-		// Run a simple terminal command, liksdfe "ls" (or "dir" for Windows) hex.EncodeToString([]byte(key)
+		line := scanner.Text()
 		hexString := hex.EncodeToString([]byte(line))
 		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+hexString, messagePath)
 		output, err := cmd.Output()
@@ -48,15 +48,19 @@ func main() {
 			return
 		}
 
-		if string(output) == "HMAC-SHA1("+messagePath+")= "+(tag) {
-			fmt.Println("Key found:", line)
-			break
+		outputString := strings.TrimSpace(string(output))
+		parts := strings.Split(outputString, "= ")
+		if len(parts) == 2 {
+			hashValue := strings.TrimSpace(parts[1])
+
+			if hashValue == tag {
+				fmt.Println("Key found:", line)
+				break
+			}
 		}
 	}
 
-	// Check for errors that occurred during scanning
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
 	}
-
 }
