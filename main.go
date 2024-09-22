@@ -49,10 +49,8 @@ func main() {
 		}
 		if string(output) == tag {
 			fmt.Println("Key found:", line)
+			break
 		}
-
-		// Print the output
-		fmt.Println(string(output))
 	}
 
 	// Check for errors that occurred during scanning
