@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"os/exec"
@@ -38,8 +39,9 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text() // Get the text of the current line
-		// Run a simple terminal command, liksdfe "ls" (or "dir" for Windows)
-		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+line, messagePath)
+		// Run a simple terminal command, liksdfe "ls" (or "dir" for Windows) hex.EncodeToString([]byte(key)
+		hexString := hex.EncodeToString([]byte(line))
+		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+hexString, messagePath)
 		output, err := cmd.Output()
 		if err != nil {
 			fmt.Println("Error running command:", err)
