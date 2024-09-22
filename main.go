@@ -48,7 +48,7 @@ func main() {
 			return
 		}
 
-		if string(output) == "HMAC-SHA1("+tag+")= " {
+		if string(output) == "HMAC-SHA1("+messagePath+")= "+(tag) {
 			fmt.Println("Key found:", line)
 			break
 		}
