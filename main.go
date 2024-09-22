@@ -47,7 +47,8 @@ func main() {
 			fmt.Println("Error running command:", err)
 			return
 		}
-		if string(output) == tag {
+
+		if string(output) == "HMAC-SHA1("+tag+")= " {
 			fmt.Println("Key found:", line)
 			break
 		}
