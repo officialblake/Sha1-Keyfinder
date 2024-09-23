@@ -10,39 +10,41 @@ import (
 )
 
 func main() {
-	var wordPath string
+	var words string
 	var tag string
-	var messagePath string
+	var message string
+
 	fmt.Print("Path to word bank: ")
-	fmt.Scan(&wordPath)
+	fmt.Scan(&words)
 
 	fmt.Print("Path to message: ")
-	fmt.Scan(&messagePath)
+	fmt.Scan(&message)
 
 	fmt.Print("Enter desried SHA1 tag: ")
 	fmt.Scan(&tag)
 
-	file, err := os.Open(wordPath)
+	file, err := os.Open(words)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 		return
 	}
 	defer file.Close()
 
-	_, err = os.Open(messagePath)
+	messageFile, err := os.Open(message)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 		return
 	}
-	defer file.Close()
+	messageFile.Close()
 
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
 		line := scanner.Text()
 		hexString := hex.EncodeToString([]byte(line))
-		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+hexString, messagePath)
+		cmd := exec.Command("openssl", "dgst", "-sha1", "-mac", "HMAC", "-macopt", "hexkey:"+hexString, message)
 		output, err := cmd.Output()
+
 		if err != nil {
 			fmt.Println("Error running command:", err)
 			return
@@ -50,6 +52,7 @@ func main() {
 
 		outputString := strings.TrimSpace(string(output))
 		parts := strings.Split(outputString, "= ")
+
 		if len(parts) == 2 {
 			hashValue := strings.TrimSpace(parts[1])
 
